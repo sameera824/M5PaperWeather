@@ -283,15 +283,16 @@ void WeatherDisplay::DrawM5PaperInfo(int x, int y, int dx, int dy)
 void WeatherDisplay::DrawDaily(int x, int y, int dx, int dy, Weather &weather, int index)
 {
    time_t time = weather.forecastTime[index];
-   int    temp = weather.forecastMaxTemp[index];
+   int    tMin = weather.forecastMinTemp[index];
+   int    tMax = weather.forecastMaxTemp[index];
+   int    pop  = weather.forecastPop[index];
    String icon = weather.forecastIcon[index];
    
    canvas.setTextSize(2);
-   canvas.drawCentreString(index == 0 ? "Today" : getShortDayOfWeekString(time), x + dx / 2, y + 10, 1);
-   canvas.drawCentreString(String(temp) + " C",         x + dx / 2, y + 30, 1);
+   canvas.drawCentreString(index == 0 ? "Today" : getShortDayOfWeekString(time), x + dx / 2, y + 5, 1);
 
    int iconX = x + dx / 2 - 32;
-   int iconY = y + 50;
+   int iconY = y + 20;
    
         if (icon == "01d") DrawIcon(iconX, iconY, (uint16_t *) image_data_01d, 64, 64, true);
    else if (icon == "01n") DrawIcon(iconX, iconY, (uint16_t *) image_data_03n, 64, 64, true);
@@ -312,6 +313,9 @@ void WeatherDisplay::DrawDaily(int x, int y, int dx, int dy, Weather &weather, i
    else if (icon == "50d") DrawIcon(iconX, iconY, (uint16_t *) image_data_50d, 64, 64, true);
    else if (icon == "50n") DrawIcon(iconX, iconY, (uint16_t *) image_data_50n, 64, 64, true);
    else DrawIcon(iconX, iconY, (uint16_t *) image_data_unknown, 64, 64, true);
+
+   canvas.drawCentreString(String(tMin)+"/"+String(tMax), x + dx / 2, y + 84, 1);
+   canvas.drawCentreString(String(pop)+"%", x + dx / 2, y + 102, 1);
 }
 
 /* Draw a graph with x- and y-axis and values */
