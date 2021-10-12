@@ -52,7 +52,7 @@ protected:
 
    void DrawDaily(int x, int y, int dx, int dy, Weather &weather, int index);
    
-   void DrawGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[]);
+   void DrawGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[], float values2[]);
    void DrawDualGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[], int offsetB, int yMinB, int yMaxB, float valuesB[]);
 
 public:
@@ -319,7 +319,7 @@ void WeatherDisplay::DrawDaily(int x, int y, int dx, int dy, Weather &weather, i
 }
 
 /* Draw a graph with x- and y-axis and values */
-void WeatherDisplay::DrawGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[])
+void WeatherDisplay::DrawGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[], float values2[])
 {
    String yMinString = String(yMin);
    String yMaxString = String(yMax);
@@ -370,6 +370,26 @@ void WeatherDisplay::DrawGraph(int x, int y, int dx, int dy, String title, int x
       }
       iOldX = xPos;
       iOldY = yPos;
+   }
+   if (values2 != NULL) {
+      for (int i = xMin; i <= xMax; i++) {
+         float yValue   = values2[i];
+         float yValueDY = (float) graphDY / (yMax - yMin);
+         int   xPos     = graphX + graphDX / xMax * i;
+         int   yPos     = graphY + graphDY - (yValue - yMin) * yValueDY;
+
+         if (yPos > graphY + graphDY) yPos = graphY + graphDY;
+         if (yPos < graphY)           yPos = graphY;
+
+         if (i > xMin) {
+            canvas.drawLine(iOldX, iOldY, xPos, yPos, M5EPD_Canvas::G15);         
+            canvas.drawLine(iOldX, iOldY+1, xPos, yPos+1, M5EPD_Canvas::G0);         
+         }
+         canvas.fillCircle(xPos, yPos, 3, M5EPD_Canvas::G15);
+         canvas.fillCircle(xPos, yPos, 2, M5EPD_Canvas::G0);
+         iOldX = xPos;
+         iOldY = yPos;
+      }
    }
 }
 
@@ -434,10 +454,12 @@ void WeatherDisplay::DrawDualGraph(int x, int y, int dx, int dy, String title, i
       if (yPos > graphY + graphDY) yPos = graphY + graphDY;
       if (yPos < graphY)           yPos = graphY;
 
-      canvas.fillCircle(xPos, yPos, 2, M5EPD_Canvas::G15);
       if (i > xMin + offset) {
-         canvas.drawLine(iOldX, iOldY, xPos, yPos, M5EPD_Canvas::G15);         
+         canvas.drawLine(iOldX, iOldY,   xPos, yPos,   M5EPD_Canvas::G15);
+         canvas.drawLine(iOldX, iOldY+1, xPos, yPos+1, M5EPD_Canvas::G0);
       }
+      canvas.fillCircle(xPos, yPos, 3, M5EPD_Canvas::G0);
+      canvas.fillCircle(xPos, yPos, 2, M5EPD_Canvas::G15);
       iOldX = xPos;
       iOldY = yPos;
    }
@@ -477,10 +499,10 @@ void WeatherDisplay::Show()
    }
 
    canvas.drawRect(15, 408, maxX - 30, 122, M5EPD_Canvas::G15);
-   DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 12, -20,   30, myData.weather.hourlyMaxTemp);
+   DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 12, -20,   30, myData.weather.hourlyMaxTemp, NULL);
    DrawDualGraph(247, 408, 232, 122, "Rain (mm/%)", 0, 12,   0,  100, myData.weather.hourlyPop, 1, 0, myData.weather.maxRain, myData.weather.hourlyRain);
-   DrawGraph(479, 408, 232, 122, "Rain (%)",        1, 12,   0,  100, myData.weather.hourlyPop);
-   DrawGraph(711, 408, 232, 122, "Pressure (hPa)",  0, 12, 800, 1400, myData.weather.hourlyPressure);
+   DrawGraph(479, 408, 232, 122, "Rain (%)",        1, 12,   0,  100, myData.weather.hourlyPop, NULL);
+   DrawGraph(711, 408, 232, 122, "Pressure (hPa)",  0, 12, 800, 1400, myData.weather.hourlyPressure, NULL);
    
    canvas.pushCanvas(0, 0, UPDATE_MODE_GC16);
    delay(1000);
