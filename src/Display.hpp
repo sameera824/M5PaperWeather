@@ -350,7 +350,7 @@ void WeatherDisplay::DrawGraph(int x, int y, int dx, int dy, String title, int x
    int    graphY     = y + 35;
    int    graphDX    = dx - textWidth - 20;
    int    graphDY    = dy - 35 - 20;
-   float  xStep      = graphDX / (xMax - xMin);
+   float  xStep      = graphDX / xMax;
    float  yStep      = graphDY / (yMax - yMin);
    int    iOldX      = 0;
    int    iOldY      = 0;
@@ -360,7 +360,7 @@ void WeatherDisplay::DrawGraph(int x, int y, int dx, int dy, String title, int x
    canvas.setTextSize(1);
    canvas.drawString(yMaxString, x + 5, graphY - 5);   
    canvas.drawString(yMinString, x + 5, graphY + graphDY - 3);   
-   for (int i = 0; i <= (xMax - xMin); i++) {
+   for (int i = 0; i <= xMax; i++) {
       canvas.drawString(String(i), graphX + i * xStep, graphY + graphDY + 5);   
    }
    
@@ -378,9 +378,9 @@ void WeatherDisplay::DrawGraph(int x, int y, int dx, int dy, String title, int x
       }
    }
    for (int i = xMin; i <= xMax; i++) {
-      float yValue   = values[i - xMin];
+      float yValue   = values[i];
       float yValueDY = (float) graphDY / (yMax - yMin);
-      int   xPos     = graphX + graphDX / (xMax - xMin) * i;
+      int   xPos     = graphX + graphDX / xMax * i;
       int   yPos     = graphY + graphDY - (yValue - yMin) * yValueDY;
 
       if (yPos > graphY + graphDY) yPos = graphY + graphDY;
@@ -419,7 +419,7 @@ void WeatherDisplay::DrawBarGraph(int x, int y, int dx, int dy, String title, in
    
    canvas.drawRect(graphX, graphY, graphDX, graphDY, M5EPD_Canvas::G15);   
 
-   for (int i = xMin; i <= xMax; i++) {
+   for (int i = xMin; i < xMax; i++) {
       float yValue   = values[i - xMin];
       float yValueDY = (float) graphDY / (float)(yMax - yMin);
       int   xPos     = graphX + graphDX / (xMax - xMin) * i;
