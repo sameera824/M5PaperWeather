@@ -313,7 +313,7 @@ void WeatherDisplay::DrawDaily(int x, int y, int dx, int dy, Weather &weather, i
    String icon = weather.forecastIcon[index];
    
    canvas.setTextSize(2);
-   canvas.drawCentreString(getShortDateString(time), x + dx / 2, y + 10, 1);
+   canvas.drawCentreString(index == 0 ? "Today" : getShortDayOfWeekString(time), x + dx / 2, y + 10, 1);
    canvas.drawCentreString(String(temp) + " C",         x + dx / 2, y + 30, 1);
 
    int iconX = x + dx / 2 - 32;
