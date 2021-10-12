@@ -111,6 +111,16 @@ String getDateString(time_t rawtime)
    return (String) buff;
 }
 
+/* Convert the time_t to the date part MM/DD */
+String getShortDateString(time_t rawtime)
+{
+   char buff[32];
+
+   sprintf(buff,"%02d/%02d", month(rawtime), day(rawtime));
+
+   return (String) buff;
+}
+
 /* Convert the time_t to the time part HH:MM:SS format */
 String getTimeString(time_t rawtime)
 {

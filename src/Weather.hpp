@@ -49,11 +49,13 @@ public:
    String hourlyIcon[MAX_HOURLY];          //!< openweathermap icon of the forecast weather
 
    int    maxRain;                         //!< maximum rain in mm of the day forecast
+   time_t forecastTime[MAX_FORECAST];      //!< timestamp of the daily forecast
    float  forecastMaxTemp[MAX_FORECAST];   //!< max temperature
    float  forecastMinTemp[MAX_FORECAST];   //!< min temperature
    float  forecastRain[MAX_FORECAST];      //!< max rain in mm
    float  forecastHumidity[MAX_FORECAST];  //!< humidity of the dayly forecast
    float  forecastPressure[MAX_FORECAST];  //!< air pressure
+   String forecastIcon[MAX_FORECAST];      //!< openweathermap icon of the forecast weather
 
 protected:
    /* Convert UTC time to local time */
@@ -128,11 +130,13 @@ protected:
       JsonArray dayly_list  = root["daily"];
       for (int i = 0; i < MAX_FORECAST; i++) {
          if (i < dayly_list.size()) {
+            forecastTime[i]     = LocalTime(dayly_list[i]["dt"].as<int>());
             forecastMaxTemp[i]  = dayly_list[i]["temp"]["max"].as<float>();
             forecastMinTemp[i]  = dayly_list[i]["temp"]["min"].as<float>();
             forecastRain[i]     = dayly_list[i]["rain"].as<float>();
             forecastHumidity[i] = dayly_list[i]["humidity"].as<float>();
             forecastPressure[i] = dayly_list[i]["pressure"].as<float>();
+            forecastIcon[i]     = dayly_list[i]["weather"][0]["icon"].as<char *>();
             if (forecastRain[i] > maxRain) {
                maxRain = forecastRain[i];
             }

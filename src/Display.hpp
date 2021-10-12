@@ -51,7 +51,7 @@ protected:
    void DrawWindInfo(int x, int y, int dx, int dy);
    void DrawM5PaperInfo(int x, int y, int dx, int dy);
 
-   void DrawHourly(int x, int y, int dx, int dy, Weather &weather, int index);
+   void DrawDaily(int x, int y, int dx, int dy, Weather &weather, int index);
    
    void DrawGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[]);
 
@@ -304,23 +304,19 @@ void WeatherDisplay::DrawM5PaperInfo(int x, int y, int dx, int dy)
    
 }
 
-/* Draw one hourly weather information */
-void WeatherDisplay::DrawHourly(int x, int y, int dx, int dy, Weather &weather, int index)
+/* Draw one daily weather information */
+void WeatherDisplay::DrawDaily(int x, int y, int dx, int dy, Weather &weather, int index)
 {
-   time_t time = weather.hourlyTime[index];
-   int    temp = weather.hourlyMaxTemp[index];
-   String main = weather.hourlyMain[index];
-   String icon = weather.hourlyIcon[index];
+   time_t time = weather.forecastTime[index];
+   int    temp = weather.forecastMaxTemp[index];
+   String icon = weather.forecastIcon[index];
    
    canvas.setTextSize(2);
-   canvas.drawCentreString(getHourString(time) + ":00", x + dx / 2, y + 10, 1);
+   canvas.drawCentreString(getShortDateString(time), x + dx / 2, y + 10, 1);
    canvas.drawCentreString(String(temp) + " C",         x + dx / 2, y + 30, 1);
-   // canvas.drawCentreString(main,                        x + dx / 2, y + 70, 1);
 
    int iconX = x + dx / 2 - 32;
    int iconY = y + 50;
-   
-   // DrawIcon(x + dx / 2 - 32, y + 50, (uint16_t *) image_data_03d, 64, 64, true);
    
         if (icon == "01d") DrawIcon(iconX, iconY, (uint16_t *) image_data_01d, 64, 64, true);
    else if (icon == "01n") DrawIcon(iconX, iconY, (uint16_t *) image_data_03n, 64, 64, true);
@@ -426,9 +422,9 @@ void WeatherDisplay::Show()
    DrawM5PaperInfo(697, 35, 245, 251);
 
    canvas.drawRect(15, 286, maxX - 30, 122, M5EPD_Canvas::G15);
-   for (int x = 15, i = 0; x <= 930; x += 116, i += 3) {
+   for (int x = 15, i = 0; x <= 930; x += 116, i++) {
       canvas.drawLine(x, 286, x, 408, M5EPD_Canvas::G15);
-      DrawHourly(x, 286, 116, 122, myData.weather, i);
+      DrawDaily(x, 286, 116, 122, myData.weather, i);
    }
 
    canvas.drawRect(15, 408, maxX - 30, 122, M5EPD_Canvas::G15);
