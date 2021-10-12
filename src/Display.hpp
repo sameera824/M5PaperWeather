@@ -40,14 +40,13 @@ protected:
    void DisplayDisplayWindSection(int x, int y, float angle, float windspeed, int radius);    
    
    void DrawIcon(int x, int y, const uint16_t *icon, int dx = 64, int dy = 64, bool highContrast = false);
-   void DrawMoon(int x, int y, int dd, int mm, int yy);
    
    void DrawHead();
    void DrawRSSI(int x, int y);
    void DrawBattery(int x, int y);
 
+   void DrawWeatherInfo(int x, int y, int dx, int dy);
    void DrawSunInfo(int x, int y, int dx, int dy);
-   void DrawMoonInfo(int x, int y, int dx, int dy);
    void DrawWindInfo(int x, int y, int dx, int dy);
    void DrawM5PaperInfo(int x, int y, int dx, int dy);
 
@@ -148,66 +147,41 @@ void WeatherDisplay::DrawSunInfo(int x, int y, int dx, int dy)
    canvas.drawString(getHourMinString(myData.weather.sunset), x + 105, y + 175, 1);
 }
 
-/* The moon phase drawing was from the github project
- * https://github.com/G6EJD/ESP32-Revised-Weather-Display-42-E-Paper
- * See http://www.dsbird.org.uk
- * Copyright (c) David Bird
- */
-void WeatherDisplay::DrawMoon(int x, int y, int dd, int mm, int yy)
+/* Draw current weather information */
+void WeatherDisplay::DrawWeatherInfo(int x, int y, int dx, int dy)
 {
-   const int diameter        = 45;
-   const int number_of_lines = 90;
-   double    Phase           = NormalizedMoonPhase(dd, mm, yy);
-   
-   canvas.drawCircle(x + diameter - 1, y + diameter, diameter / 2 + 1, M5EPD_Canvas::G15);
-   
-   for (double Ypos = 0; Ypos <= number_of_lines / 2; Ypos++) {
-      double Xpos = sqrt(number_of_lines / 2 * number_of_lines / 2 - Ypos * Ypos);
-      
-      double Rpos = 2 * Xpos;
-      double Xpos1, Xpos2;
-      
-      if (Phase < 0.5) {
-         Xpos1 = -Xpos;
-         Xpos2 = Rpos - 2 * Phase * Rpos - Xpos;
-      } else {
-         Xpos1 = Xpos;
-         Xpos2 = Xpos - 2 * Phase * Rpos + Rpos;
-      }
-      double pW1x = (Xpos1 + number_of_lines) / number_of_lines * diameter + x;
-      double pW1y = (number_of_lines - Ypos)  / number_of_lines * diameter + y;
-      double pW2x = (Xpos2 + number_of_lines) / number_of_lines * diameter + x;
-      double pW2y = (number_of_lines - Ypos)  / number_of_lines * diameter + y;
-      double pW3x = (Xpos1 + number_of_lines) / number_of_lines * diameter + x;
-      double pW3y = (Ypos + number_of_lines)  / number_of_lines * diameter + y;
-      double pW4x = (Xpos2 + number_of_lines) / number_of_lines * diameter + x;
-      double pW4y = (Ypos + number_of_lines)  / number_of_lines * diameter + y;
-      
-      canvas.drawLine(pW1x, pW1y, pW2x, pW2y, M5EPD_Canvas::G15);
-      canvas.drawLine(pW3x, pW3y, pW4x, pW4y, M5EPD_Canvas::G15);
-   }
-   canvas.drawCircle(x + diameter - 1, y + diameter, diameter / 2, M5EPD_Canvas::G15);
-}
-
-/* Draw the moon information with moonrise, moonset and moon phase */
-void WeatherDisplay::DrawMoonInfo(int x, int y, int dx, int dy)
-{
-   rtc_date_t date_struct;
-   
-   M5.RTC.getDate(&date_struct);
-   
    canvas.setTextSize(3);
-   canvas.drawCentreString("Moon", x + dx / 2, y + 7, 1);
+   canvas.drawCentreString("Forcast", x + dx / 2, y + 7, 1);
    canvas.drawLine(x, y + 35, x + dx, y + 35, M5EPD_Canvas::G15);
 
-   canvas.setTextSize(3);
-   DrawIcon(x + 30, y + 40, (uint16_t *) MOONRISE64x64);
-   canvas.drawString(getHourMinString(myData.moonRise), x + 110, y + 65, 1);
-   
-   DrawIcon(x + 30, y + 105, (uint16_t *) MOONSET64x64);
-   canvas.drawString(getHourMinString(myData.moonSet), x + 110, y + 130, 1);
+   String icon = myData.weather.hourlyIcon[0];
+   int iconX = x + 15;
+   int iconY = y + 45;
 
-   DrawMoon(x + dx / 2 - 45, y + 160, date_struct.day, date_struct.mon, date_struct.year);
+        if (icon == "01d") DrawIcon(iconX, iconY, (uint16_t *) image_data_01d, 64, 64, true);
+   else if (icon == "01n") DrawIcon(iconX, iconY, (uint16_t *) image_data_03n, 64, 64, true);
+   else if (icon == "02d") DrawIcon(iconX, iconY, (uint16_t *) image_data_02d, 64, 64, true);
+   else if (icon == "02n") DrawIcon(iconX, iconY, (uint16_t *) image_data_02n, 64, 64, true);
+   else if (icon == "03d") DrawIcon(iconX, iconY, (uint16_t *) image_data_03d, 64, 64, true);
+   else if (icon == "03n") DrawIcon(iconX, iconY, (uint16_t *) image_data_03n, 64, 64, true);
+   else if (icon == "04d") DrawIcon(iconX, iconY, (uint16_t *) image_data_04d, 64, 64, true);
+   else if (icon == "04n") DrawIcon(iconX, iconY, (uint16_t *) image_data_03n, 64, 64, true);
+   else if (icon == "09d") DrawIcon(iconX, iconY, (uint16_t *) image_data_09d, 64, 64, true);
+   else if (icon == "09n") DrawIcon(iconX, iconY, (uint16_t *) image_data_09n, 64, 64, true);
+   else if (icon == "10d") DrawIcon(iconX, iconY, (uint16_t *) image_data_10d, 64, 64, true);
+   else if (icon == "10n") DrawIcon(iconX, iconY, (uint16_t *) image_data_03n, 64, 64, true);
+   else if (icon == "11d") DrawIcon(iconX, iconY, (uint16_t *) image_data_11d, 64, 64, true);
+   else if (icon == "11n") DrawIcon(iconX, iconY, (uint16_t *) image_data_11n, 64, 64, true);
+   else if (icon == "13d") DrawIcon(iconX, iconY, (uint16_t *) image_data_13d, 64, 64, true);
+   else if (icon == "13n") DrawIcon(iconX, iconY, (uint16_t *) image_data_13n, 64, 64, true);
+   else if (icon == "50d") DrawIcon(iconX, iconY, (uint16_t *) image_data_50d, 64, 64, true);
+   else if (icon == "50n") DrawIcon(iconX, iconY, (uint16_t *) image_data_50n, 64, 64, true);
+   else DrawIcon(iconX, iconY, (uint16_t *) image_data_unknown, 64, 64, true);
+
+   canvas.drawString(myData.weather.hourlyMain[0], x + 95, y + 70, 1);
+
+   canvas.drawString(getFloatString(myData.weather.hourlyMaxTemp[0], " C"), x + 30, y + 140, 1);
+   canvas.drawString(getFloatString(myData.weather.hourlyRain[0], " mm"),   x + 30, y + 185, 1);
 }
 
 /* Draw the in the wind section
@@ -458,8 +432,8 @@ void WeatherDisplay::Show()
    canvas.drawLine(232, 35, 232, 286, M5EPD_Canvas::G15);
    canvas.drawLine(465, 35, 465, 286, M5EPD_Canvas::G15);
    canvas.drawLine(697, 35, 697, 286, M5EPD_Canvas::G15);
-   DrawSunInfo    ( 15, 35, 232, 251);
-   DrawMoonInfo   (232, 35, 232, 251);
+   DrawWeatherInfo( 15, 35, 232, 251);
+   DrawSunInfo    (232, 35, 232, 251);
    DrawWindInfo   (465, 35, 232, 251);
    DrawM5PaperInfo(697, 35, 245, 251);
 

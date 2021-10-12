@@ -180,6 +180,17 @@ int WifiGetRssiAsQualityInt(int rssi)
    return quality;
 }
 
+/* Convert the float value to string with unit */
+String getFloatString(float value, const char* unit)
+{
+   char buff[32];
+   
+   sprintf(buff,"%6.2f%s", value, unit);
+
+   return (String) buff;
+}
+
+
 /* Convert a day, month, year to a julian int
  * The moon phase calculation is part of the github project
  * https://github.com/G6EJD/ESP32-Revised-Weather-Display-42-E-Paper
