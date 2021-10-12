@@ -27,7 +27,7 @@
 
 #define MAX_HOURLY   24
 #define MAX_FORECAST  8
-#define MIN_RAIN     10
+#define MIN_RAIN     5
 
 /**
   * Class for reading all the weather data from openweathermap.
@@ -45,10 +45,13 @@ public:
 
    time_t hourlyTime[MAX_HOURLY];          //!< timestamp of the hourly forecast
    float  hourlyMaxTemp[MAX_HOURLY];       //!< max temperature forecast
+   int    maxRain;                         //!< maximum rain in mm of the hourly forecast
+   float  hourlyRain[MAX_HOURLY];          //!< max rain in mm
+   float  hourlyHumidity[MAX_HOURLY];      //!< humidity of the hourly forecast
+   float  hourlyPressure[MAX_HOURLY];      //!< air pressure
    String hourlyMain[MAX_HOURLY];          //!< description of the hourly forecast
    String hourlyIcon[MAX_HOURLY];          //!< openweathermap icon of the forecast weather
 
-   int    maxRain;                         //!< maximum rain in mm of the day forecast
    time_t forecastTime[MAX_FORECAST];      //!< timestamp of the daily forecast
    float  forecastMaxTemp[MAX_FORECAST];   //!< max temperature
    float  forecastMinTemp[MAX_FORECAST];   //!< min temperature
@@ -117,13 +120,22 @@ protected:
       hourlyTime[0]    = LocalTime(root["current"]["dt"].as<int>());
       hourlyMaxTemp[0] = root["current"]["temp"].as<float>();
       hourlyMain[0]    = root["current"]["weather"][0]["main"].as<char *>();
+      hourlyRain[0]    = root["current"]["rain"]["1h"].as<float>();
+      hourlyHumidity[0]= root["current"]["humidity"].as<float>();
+      hourlyPressure[0]= root["current"]["pressure"].as<float>();
       hourlyIcon[0]    = root["current"]["weather"][0]["icon"].as<char *>();
       for (int i = 1; i < MAX_HOURLY; i++) {
          if (i < hourly_list.size()) {
             hourlyTime[i]    = LocalTime(hourly_list[i - 1]["dt"].as<int>());
             hourlyMaxTemp[i] = hourly_list[i - 1]["temp"].as<float>();
             hourlyMain[i]    = hourly_list[i - 1]["weather"][0]["main"].as<char *>();
+            hourlyRain[i]    = hourly_list[i - 1]["rain"]["1h"].as<float>();
+            hourlyHumidity[i]= hourly_list[i - 1]["humidity"].as<float>();
+            hourlyPressure[i]= hourly_list[i - 1]["pressure"].as<float>();
             hourlyIcon[i]    = hourly_list[i - 1]["weather"][0]["icon"].as<char *>();
+            if (forecastRain[i] > maxRain) {
+               maxRain = forecastRain[i];
+            }
          }
       }
       
@@ -137,9 +149,6 @@ protected:
             forecastHumidity[i] = dayly_list[i]["humidity"].as<float>();
             forecastPressure[i] = dayly_list[i]["pressure"].as<float>();
             forecastIcon[i]     = dayly_list[i]["weather"][0]["icon"].as<char *>();
-            if (forecastRain[i] > maxRain) {
-               maxRain = forecastRain[i];
-            }
          }
       }
           
