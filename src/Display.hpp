@@ -20,8 +20,8 @@
   * Main class for drawing the content to the e-paper display.
   */
 #pragma once
-#include "Data.h"
-#include "Icons.h"
+#include "Data.hpp"
+#include "Icons.hpp"
 
 
 M5EPD_Canvas canvas(&M5.EPD); // Main canvas of the e-paper

@@ -23,7 +23,7 @@
 #include <HTTPClient.h>
 #include <WiFiClient.h>
 #include <ArduinoJson.h>
-#include "Utils.h"
+#include "Utils.hpp"
 
 #define MAX_HOURLY   24
 #define MAX_FORECAST  8

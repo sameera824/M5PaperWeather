@@ -3,4 +3,4 @@
 .fuse_hidden*
 
 ## Project files ######
-ConfigOverride.h
+ConfigOverride.hpp

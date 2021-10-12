@@ -20,6 +20,7 @@
   * Helper function to set the internal RTC date and time.
   */
 #pragma once
+#include "Data.hpp"
 
 /* Set the internal RTC clock with the weather timestamp */
 bool SetRTCDateTime(MyData &myData)
