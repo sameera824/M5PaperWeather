@@ -151,7 +151,7 @@ void WeatherDisplay::DrawSunInfo(int x, int y, int dx, int dy)
 void WeatherDisplay::DrawWeatherInfo(int x, int y, int dx, int dy)
 {
    canvas.setTextSize(3);
-   canvas.drawCentreString("Forcast", x + dx / 2, y + 7, 1);
+   canvas.drawCentreString("Weather", x + dx / 2, y + 7, 1);
    canvas.drawLine(x, y + 35, x + dx, y + 35, M5EPD_Canvas::G15);
 
    String icon = myData.weather.hourlyIcon[0];
