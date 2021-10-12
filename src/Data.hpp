@@ -39,9 +39,6 @@ public:
    int     sht30Temperatur;  //!< SHT30 temperature
    int     sht30Humidity;    //!< SHT30 humidity
 
-   time_t  moonRise;         //!< Calculated moon rise
-   time_t  moonSet;          //!< Calculated moon set
-   
    Weather weather;          //!< All the openweathermap data
 
 public:
@@ -51,8 +48,6 @@ public:
       , batteryCapacity(0)
       , sht30Temperatur(0)
       , sht30Humidity(0)
-      , moonRise(0)
-      , moonSet(0)
    {
    }
 
@@ -68,8 +63,6 @@ public:
       Serial.println("BatteryCapacity: " + String(batteryCapacity));
       Serial.println("Sht30Temperatur: " + String(sht30Temperatur));
       Serial.println("Sht30Humidity: "   + String(sht30Humidity));
-      Serial.println("MoonRise: "        + getDateTimeString(moonRise));
-      Serial.println("MoonSet: "         + getDateTimeString(moonSet));
       
       Serial.println("Sunrise: "         + getDateTimeString(weather.sunrise));
       Serial.println("Sunset: "          + getDateTimeString(weather.sunset));
