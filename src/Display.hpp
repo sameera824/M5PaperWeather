@@ -54,6 +54,7 @@ protected:
    void DrawDaily(int x, int y, int dx, int dy, Weather &weather, int index);
    
    void DrawGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[]);
+   void DrawBarGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[]);
 
 public:
    WeatherDisplay(MyData &md, int x = 960, int y = 540)
@@ -394,6 +395,47 @@ void WeatherDisplay::DrawGraph(int x, int y, int dx, int dy, String title, int x
    }
 }
 
+/* Draw a bar graph */
+void WeatherDisplay::DrawBarGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[])
+{
+   String yMinString = String(yMin);
+   String yMaxString = String(yMax);
+   int    textWidth  = 5 + max(yMinString.length() * 3.5, yMaxString.length() * 3.5);
+   int    graphX     = x + 5 + textWidth + 5;
+   int    graphY     = y + 35;
+   int    graphDX    = dx - textWidth - 20;
+   int    graphDY    = dy - 35 - 20;
+   float  xStep      = graphDX / (xMax - xMin);
+   float  yStep      = graphDY / (yMax - yMin);
+
+   canvas.setTextSize(2);
+   canvas.drawCentreString(title, x + dx / 2, y + 10, 1);
+   canvas.setTextSize(1);
+   canvas.drawString(yMaxString, x + 5, graphY - 5);   
+   canvas.drawString(yMinString, x + 5, graphY + graphDY - 3);   
+   for (int i = 0; i <= (xMax - xMin); i++) {
+      canvas.drawString(String(i), graphX + i * xStep, graphY + graphDY + 5);   
+   }
+   
+   canvas.drawRect(graphX, graphY, graphDX, graphDY, M5EPD_Canvas::G15);   
+
+   for (int i = xMin; i <= xMax; i++) {
+      float yValue   = values[i - xMin];
+      float yValueDY = (float) graphDY / (float)(yMax - yMin);
+      int   xPos     = graphX + graphDX / (xMax - xMin) * i;
+      int   yPos     = graphY + graphDY - ((yValue - (float)yMin) * yValueDY);
+
+      if (yPos > graphY + graphDY) yPos = graphY + graphDY;
+      if (yPos < graphY)           yPos = graphY;
+
+      int width = graphDX / (xMax - xMin);
+      int height = (graphY + graphDY) - yPos;
+      if (height > 0) {
+         canvas.fillRect(xPos, yPos, width, height, M5EPD_Canvas::G15);
+      }
+   }
+}
+
 /* Main function to show all the data to the e-paper */
 void WeatherDisplay::Show()
 {
@@ -429,7 +471,7 @@ void WeatherDisplay::Show()
 
    canvas.drawRect(15, 408, maxX - 30, 122, M5EPD_Canvas::G15);
    DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 12, -20,   30, myData.weather.hourlyMaxTemp);
-   DrawGraph(247, 408, 232, 122, "Rain (mm)",       0, 12,   0,   myData.weather.maxRain, myData.weather.hourlyRain);
+   DrawBarGraph(247, 408, 232, 122, "Rain (mm)",    0, 12,   0,   myData.weather.maxRain, myData.weather.hourlyRain);
    DrawGraph(479, 408, 232, 122, "Humidity (%)",    0, 12,   0,  100, myData.weather.hourlyHumidity);
    DrawGraph(711, 408, 232, 122, "Pressure (hPa)",  0, 12, 800, 1400, myData.weather.hourlyPressure);
    
