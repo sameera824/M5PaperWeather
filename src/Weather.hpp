@@ -45,7 +45,7 @@ public:
 
    time_t hourlyTime[MAX_HOURLY];          //!< timestamp of the hourly forecast
    float  hourlyMaxTemp[MAX_HOURLY];       //!< max temperature forecast
-   int    maxRain;                         //!< maximum rain in mm of the hourly forecast
+   int    hourlyMaxRain;                   //!< maximum rain in mm of the hourly forecast
    float  hourlyRain[MAX_HOURLY];          //!< max rain in mm
    float  hourlyPop[MAX_HOURLY];           //!< pop of the hourly forecast
    float  hourlyPressure[MAX_HOURLY];      //!< air pressure
@@ -55,6 +55,7 @@ public:
    time_t forecastTime[MAX_FORECAST];      //!< timestamp of the daily forecast
    float  forecastMaxTemp[MAX_FORECAST];   //!< max temperature
    float  forecastMinTemp[MAX_FORECAST];   //!< min temperature
+   int    forecastMaxRain;                 //!< maximum rain in mm of the daily forecast
    float  forecastRain[MAX_FORECAST];      //!< max rain in mm
    float  forecastPop[MAX_FORECAST];       //!< pop of the dayly forecast
    float  forecastPressure[MAX_FORECAST];  //!< air pressure
@@ -133,8 +134,8 @@ protected:
             hourlyPop[i]     = hourly_list[i - 1]["pop"].as<float>() * 100;
             hourlyPressure[i]= hourly_list[i - 1]["pressure"].as<float>();
             hourlyIcon[i]    = hourly_list[i - 1]["weather"][0]["icon"].as<char *>();
-            if (forecastRain[i] > maxRain) {
-               maxRain = forecastRain[i];
+            if (hourlyRain[i] > hourlyMaxRain) {
+               hourlyMaxRain = hourlyRain[i] + 4;
             }
          }
       }
@@ -150,6 +151,9 @@ protected:
             forecastPressure[i] = dayly_list[i]["pressure"].as<float>();
             forecastIcon[i]     = dayly_list[i]["weather"][0]["icon"].as<char *>();
          }
+         if (forecastRain[i] > forecastMaxRain) {
+            forecastMaxRain = forecastRain[i] + 4;
+         }
       }
           
       return true;
@@ -163,7 +167,8 @@ public:
       , sunset(0)
       , winddir(0)
       , windspeed(0)
-      , maxRain(MIN_RAIN)
+      , hourlyMaxRain(MIN_RAIN)
+      , forecastMaxRain(MIN_RAIN)
    {
       Clear();
    }
@@ -177,7 +182,8 @@ public:
       sunset            = 0;
       winddir           = 0;
       windspeed         = 0;
-      maxRain           = MIN_RAIN;
+      hourlyMaxRain           = MIN_RAIN;
+      forecastMaxRain         = MIN_RAIN;
       memset(hourlyMaxTemp,    0, sizeof(hourlyMaxTemp));
       memset(forecastMaxTemp,  0, sizeof(forecastMaxTemp));
       memset(forecastMinTemp,  0, sizeof(forecastMinTemp));

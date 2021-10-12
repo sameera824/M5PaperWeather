@@ -500,9 +500,9 @@ void WeatherDisplay::Show()
 
    canvas.drawRect(15, 408, maxX - 30, 122, M5EPD_Canvas::G15);
    DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 12, -20,   30, myData.weather.hourlyMaxTemp, NULL);
-   DrawDualGraph(247, 408, 232, 122, "Rain (mm/%)", 0, 12,   0,  100, myData.weather.hourlyPop, 1, 0, myData.weather.maxRain, myData.weather.hourlyRain);
+   DrawDualGraph(247, 408, 232, 122, "Rain (mm/%)", 0, 12,   0,  100, myData.weather.hourlyPop, 1, 0, myData.weather.hourlyMaxRain, myData.weather.hourlyRain);
    DrawGraph(479, 408, 232, 122, "Temperature (C)", 0,  7, -20,   30, myData.weather.forecastMinTemp, myData.weather.forecastMaxTemp);
-   DrawDualGraph(711, 408, 232, 122, "Rain (mm/%)", 0,  7,   0,  100, myData.weather.forecastPop, 0, 0, myData.weather.maxRain, myData.weather.forecastRain);
+   DrawDualGraph(711, 408, 232, 122, "Rain (mm/%)", 0,  7,   0,  100, myData.weather.forecastPop, 0, 0, myData.weather.forecastMaxRain, myData.weather.forecastRain);
    
    canvas.pushCanvas(0, 0, UPDATE_MODE_GC16);
    delay(1000);
