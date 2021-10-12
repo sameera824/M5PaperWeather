@@ -47,7 +47,7 @@ public:
    float  hourlyMaxTemp[MAX_HOURLY];       //!< max temperature forecast
    int    maxRain;                         //!< maximum rain in mm of the hourly forecast
    float  hourlyRain[MAX_HOURLY];          //!< max rain in mm
-   float  hourlyHumidity[MAX_HOURLY];      //!< humidity of the hourly forecast
+   float  hourlyPop[MAX_HOURLY];           //!< pop of the hourly forecast
    float  hourlyPressure[MAX_HOURLY];      //!< air pressure
    String hourlyMain[MAX_HOURLY];          //!< description of the hourly forecast
    String hourlyIcon[MAX_HOURLY];          //!< openweathermap icon of the forecast weather
@@ -56,7 +56,7 @@ public:
    float  forecastMaxTemp[MAX_FORECAST];   //!< max temperature
    float  forecastMinTemp[MAX_FORECAST];   //!< min temperature
    float  forecastRain[MAX_FORECAST];      //!< max rain in mm
-   float  forecastHumidity[MAX_FORECAST];  //!< humidity of the dayly forecast
+   float  forecastPop[MAX_FORECAST];       //!< pop of the dayly forecast
    float  forecastPressure[MAX_FORECAST];  //!< air pressure
    String forecastIcon[MAX_FORECAST];      //!< openweathermap icon of the forecast weather
 
@@ -121,7 +121,7 @@ protected:
       hourlyMaxTemp[0] = root["current"]["temp"].as<float>();
       hourlyMain[0]    = root["current"]["weather"][0]["main"].as<char *>();
       hourlyRain[0]    = root["current"]["rain"]["1h"].as<float>();
-      hourlyHumidity[0]= root["current"]["humidity"].as<float>();
+      hourlyPop[0]     = root["current"]["pop"].as<float>() * 100;
       hourlyPressure[0]= root["current"]["pressure"].as<float>();
       hourlyIcon[0]    = root["current"]["weather"][0]["icon"].as<char *>();
       for (int i = 1; i < MAX_HOURLY; i++) {
@@ -130,7 +130,7 @@ protected:
             hourlyMaxTemp[i] = hourly_list[i - 1]["temp"].as<float>();
             hourlyMain[i]    = hourly_list[i - 1]["weather"][0]["main"].as<char *>();
             hourlyRain[i]    = hourly_list[i - 1]["rain"]["1h"].as<float>();
-            hourlyHumidity[i]= hourly_list[i - 1]["humidity"].as<float>();
+            hourlyPop[i]     = hourly_list[i - 1]["pop"].as<float>() * 100;
             hourlyPressure[i]= hourly_list[i - 1]["pressure"].as<float>();
             hourlyIcon[i]    = hourly_list[i - 1]["weather"][0]["icon"].as<char *>();
             if (forecastRain[i] > maxRain) {
@@ -146,7 +146,7 @@ protected:
             forecastMaxTemp[i]  = dayly_list[i]["temp"]["max"].as<float>();
             forecastMinTemp[i]  = dayly_list[i]["temp"]["min"].as<float>();
             forecastRain[i]     = dayly_list[i]["rain"].as<float>();
-            forecastHumidity[i] = dayly_list[i]["humidity"].as<float>();
+            forecastPop[i]      = dayly_list[i]["pop"].as<float>() * 100;
             forecastPressure[i] = dayly_list[i]["pressure"].as<float>();
             forecastIcon[i]     = dayly_list[i]["weather"][0]["icon"].as<char *>();
          }
@@ -182,7 +182,7 @@ public:
       memset(forecastMaxTemp,  0, sizeof(forecastMaxTemp));
       memset(forecastMinTemp,  0, sizeof(forecastMinTemp));
       memset(forecastRain,     0, sizeof(forecastRain));
-      memset(forecastHumidity, 0, sizeof(forecastHumidity));
+      memset(forecastPop,      0, sizeof(forecastPop));
       memset(forecastPressure, 0, sizeof(forecastPressure));
    }
 

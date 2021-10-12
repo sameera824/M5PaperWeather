@@ -472,7 +472,7 @@ void WeatherDisplay::Show()
    canvas.drawRect(15, 408, maxX - 30, 122, M5EPD_Canvas::G15);
    DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 12, -20,   30, myData.weather.hourlyMaxTemp);
    DrawBarGraph(247, 408, 232, 122, "Rain (mm)",    0, 12,   0,   myData.weather.maxRain, myData.weather.hourlyRain);
-   DrawGraph(479, 408, 232, 122, "Humidity (%)",    0, 12,   0,  100, myData.weather.hourlyHumidity);
+   DrawGraph(479, 408, 232, 122, "Rain (%)",        1, 12,   0,  100, myData.weather.hourlyPop);
    DrawGraph(711, 408, 232, 122, "Pressure (hPa)",  0, 12, 800, 1400, myData.weather.hourlyPressure);
    
    canvas.pushCanvas(0, 0, UPDATE_MODE_GC16);
