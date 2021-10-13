@@ -5,23 +5,20 @@
    ![M5PaperWeather](images/M5PaperWeather.png "M5Paper")
 
 
+Originally forked from [https://github.com/Bastelschlumpf/M5PaperWeather](https://github.com/Bastelschlumpf/M5PaperWeather)
 ### Description
-  Arduino project to show internal environment data and weather information from 
+  **Platform.io** project to show internal environment data and weather information from 
   openweathermap https://openweathermap.org on the e-ink display of the M5Paper.
-  Please edit the config.h file with your own data.
+  Please copy the **Config.hpp** file, rename it to ConfigOverride.hpp, and edit it with your own data.
   You need an api key from openweathermap.
   The software shows the following information:
   * A header with version, city wifi strength and battery status
+  * _[NEW]_ Current weather icon, status, temperature and rain in mm
   * Sun section with sunrise and sunset 
-  * Moon section with moonrise and moonset
   * Wind section with wind direction and wind speed
   * The internal SH30 sensor data (temperature and humidity) with the current date and time
-  * A hourly forecast with hour, temperature and a weather icon.
-  * Some detailt forecast graphs with temperature, rain, humidity and pressure
-
-### Disclaimer
-   I don't take any responsibility nor liability for using this software nor for the 
-   installation or any tips, advice, videos, etc. given by any member of this site or any related site.
+  * _[NEW]_ A daily forecast with min/max temperature, probability of precipitation, and a weather icon.
+  * _[NEW]_ Hourly and daily forecast graphs with temperature and rain.
 
 ### License
    This program is licensed under GPL-3.0
