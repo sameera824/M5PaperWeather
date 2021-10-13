@@ -44,6 +44,7 @@ public:
    float  windspeed;                       //!< Wind speed
 
    time_t hourlyTime[MAX_HOURLY];          //!< timestamp of the hourly forecast
+   int    hourlyTempRange[2];              //!< min/max temp of the hourly forecast
    float  hourlyMaxTemp[MAX_HOURLY];       //!< max temperature forecast
    int    hourlyMaxRain;                   //!< maximum rain in mm of the hourly forecast
    float  hourlyRain[MAX_HOURLY];          //!< max rain in mm
@@ -53,6 +54,7 @@ public:
    String hourlyIcon[MAX_HOURLY];          //!< openweathermap icon of the forecast weather
 
    time_t forecastTime[MAX_FORECAST];      //!< timestamp of the daily forecast
+   int    forecastTempRange[2];            //!< min/max temp of the daily forecast
    float  forecastMaxTemp[MAX_FORECAST];   //!< max temperature
    float  forecastMinTemp[MAX_FORECAST];   //!< min temperature
    int    forecastMaxRain;                 //!< maximum rain in mm of the daily forecast
@@ -137,6 +139,12 @@ protected:
             if (hourlyRain[i] > hourlyMaxRain) {
                hourlyMaxRain = hourlyRain[i] + 4;
             }
+            if (hourlyMaxTemp[i] + 2 > hourlyTempRange[1]) {
+               hourlyTempRange[1] = (int)((hourlyMaxTemp[i] + 2) / 5) * 5 + 5;
+            }
+            if (hourlyMaxTemp[i] - 2 < hourlyTempRange[0]) {
+               hourlyTempRange[0] = (int)((hourlyMaxTemp[i] - 2) / 5) * 5 - 5;
+            }
          }
       }
       
@@ -153,6 +161,12 @@ protected:
          }
          if (forecastRain[i] > forecastMaxRain) {
             forecastMaxRain = forecastRain[i] + 4;
+         }
+         if (forecastMaxTemp[i] + 2> forecastTempRange[1]) {
+            forecastTempRange[1] = (int)((forecastMaxTemp[i] + 2) / 5) * 5 + 5;
+         }
+         if (forecastMinTemp[i] - 2< forecastTempRange[0]) {
+            forecastTempRange[0] = (int)((forecastMinTemp[i] - 2) / 5) * 5 - 5;
          }
       }
           
@@ -184,6 +198,10 @@ public:
       windspeed         = 0;
       hourlyMaxRain           = MIN_RAIN;
       forecastMaxRain         = MIN_RAIN;
+      hourlyTempRange[0]         = 0;
+      hourlyTempRange[1]         = 25;
+      forecastTempRange[0]       = 0;
+      forecastTempRange[1]       = 25;
       memset(hourlyMaxTemp,    0, sizeof(hourlyMaxTemp));
       memset(forecastMaxTemp,  0, sizeof(forecastMaxTemp));
       memset(forecastMinTemp,  0, sizeof(forecastMinTemp));

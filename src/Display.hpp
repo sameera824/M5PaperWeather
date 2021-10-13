@@ -499,10 +499,10 @@ void WeatherDisplay::Show()
    }
 
    canvas.drawRect(15, 408, maxX - 30, 122, M5EPD_Canvas::G15);
-   DrawGraph( 15, 408, 232, 122, "Temp 12h (C)", 0, 12, -20,   30, myData.weather.hourlyMaxTemp, NULL);
+   DrawGraph( 15, 408, 232, 122, "Temp 12h (C)", 0, 12, myData.weather.hourlyTempRange[0], myData.weather.hourlyTempRange[1], myData.weather.hourlyMaxTemp, NULL);
    DrawDualGraph(247, 408, 232, 122, "Rain 12h (mm/%)", 0, 12,   0,  100, myData.weather.hourlyPop, 1, 0, myData.weather.hourlyMaxRain, myData.weather.hourlyRain);
    canvas.drawLine(480, 408, 480, 530, M5EPD_Canvas::G15);
-   DrawGraph(481, 408, 232, 122, "Temp 7days (C)", 0,  7, -20,   30, myData.weather.forecastMinTemp, myData.weather.forecastMaxTemp);
+   DrawGraph(481, 408, 232, 122, "Temp 7days (C)", 0,  7, myData.weather.forecastTempRange[0], myData.weather.forecastTempRange[1], myData.weather.forecastMinTemp, myData.weather.forecastMaxTemp);
    DrawDualGraph(713, 408, 232, 122, "Rain 7days (mm/%)", 0,  7,   0,  100, myData.weather.forecastPop, 0, 0, myData.weather.forecastMaxRain, myData.weather.forecastRain);
    
    canvas.pushCanvas(0, 0, UPDATE_MODE_GC16);
