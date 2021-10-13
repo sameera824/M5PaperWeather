@@ -155,7 +155,7 @@ void WeatherDisplay::DrawWeatherInfo(int x, int y, int dx, int dy)
    canvas.drawLine(x, y + 35, x + dx, y + 35, M5EPD_Canvas::G15);
 
    String icon = myData.weather.hourlyIcon[0];
-   int iconX = x + 15;
+   int iconX = x + dx / 2 - 32;
    int iconY = y + 45;
 
         if (icon == "01d") DrawIcon(iconX, iconY, (uint16_t *) image_data_01d, 64, 64, true);
@@ -178,10 +178,10 @@ void WeatherDisplay::DrawWeatherInfo(int x, int y, int dx, int dy)
    else if (icon == "50n") DrawIcon(iconX, iconY, (uint16_t *) image_data_50n, 64, 64, true);
    else DrawIcon(iconX, iconY, (uint16_t *) image_data_unknown, 64, 64, true);
 
-   canvas.drawString(myData.weather.hourlyMain[0], x + 95, y + 70, 1);
+   canvas.drawCentreString(myData.weather.hourlyMain[0], x + dx / 2, y + 110, 1);
 
-   canvas.drawString(getFloatString(myData.weather.hourlyMaxTemp[0], " C"), x + 30, y + 140, 1);
-   canvas.drawString(getFloatString(myData.weather.hourlyRain[0], " mm"),   x + 30, y + 185, 1);
+   canvas.drawString(getFloatString(myData.weather.hourlyMaxTemp[0], " C"), x + 30, y + 180, 1);
+   canvas.drawString(getFloatString(myData.weather.hourlyRain[0], " mm"),   x + 30, y + 220, 1);
 }
 
 /* Draw the in the wind section
