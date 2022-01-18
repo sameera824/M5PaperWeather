@@ -44,12 +44,9 @@ void InitEPD(bool clearDisplay = true)
 void ShutdownEPD(int sec)
 {
    Serial.println("Shutdown");
-/*
    M5.disableEPDPower();
    M5.disableEXTPower();
-   M5.disableMainPower();
-   esp_sleep_enable_timer_wakeup(sec * 1000000);
+   esp_sleep_enable_timer_wakeup((uint64_t)sec * 1000000LL);
+   esp_sleep_enable_ext0_wakeup((gpio_num_t)M5EPD_KEY_PUSH_PIN, 0);
    esp_deep_sleep_start();   
-*/   
-   M5.shutdown(sec);
 }
