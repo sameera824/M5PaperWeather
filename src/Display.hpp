@@ -286,6 +286,7 @@ void WeatherDisplay::DrawDaily(int x, int y, int dx, int dy, Weather &weather, i
    int    tMin = weather.forecastMinTemp[index];
    int    tMax = weather.forecastMaxTemp[index];
    int    pop  = weather.forecastPop[index];
+   int    rain = weather.forecastRain[index];
    String icon = weather.forecastIcon[index];
    
    canvas.setTextSize(2);
@@ -315,7 +316,7 @@ void WeatherDisplay::DrawDaily(int x, int y, int dx, int dy, Weather &weather, i
    else DrawIcon(iconX, iconY, (uint16_t *) image_data_unknown, 64, 64, true);
 
    canvas.drawCentreString(String(tMin)+"/"+String(tMax), x + dx / 2, y + 84, 1);
-   canvas.drawCentreString(String(pop)+"%", x + dx / 2, y + 102, 1);
+   canvas.drawCentreString(String(pop)+"%/"+String(rain)+"mm", x + dx / 2, y + 102, 1);
 }
 
 /* Draw a graph with x- and y-axis and values */
