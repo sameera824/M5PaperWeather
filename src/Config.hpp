@@ -21,7 +21,7 @@
   */
 #pragma once
 
-#define VERSION          "Version 1.0"
+#define VERSION          "Version 1.1"
 #define CITY_NAME        "City"
 
 // change to your location
