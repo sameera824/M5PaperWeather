@@ -123,7 +123,7 @@ protected:
       hourlyTime[0]    = LocalTime(root["current"]["dt"].as<int>());
       hourlyMaxTemp[0] = root["current"]["temp"].as<float>();
       hourlyMain[0]    = root["current"]["weather"][0]["main"].as<char *>();
-      hourlyRain[0]    = root["current"]["rain"]["1h"].as<float>();
+      hourlyRain[0]    = max(root["current"]["rain"]["1h"].as<float>(), root["current"]["snow"]["1h"].as<float>());
       hourlyPop[0]     = root["current"]["pop"].as<float>() * 100;
       hourlyPressure[0]= root["current"]["pressure"].as<float>();
       hourlyIcon[0]    = root["current"]["weather"][0]["icon"].as<char *>();
@@ -132,7 +132,7 @@ protected:
             hourlyTime[i]    = LocalTime(hourly_list[i - 1]["dt"].as<int>());
             hourlyMaxTemp[i] = hourly_list[i - 1]["temp"].as<float>();
             hourlyMain[i]    = hourly_list[i - 1]["weather"][0]["main"].as<char *>();
-            hourlyRain[i]    = hourly_list[i - 1]["rain"]["1h"].as<float>();
+            hourlyRain[i]    = max(hourly_list[i - 1]["rain"]["1h"].as<float>(), hourly_list[i - 1]["snow"]["1h"].as<float>());
             hourlyPop[i]     = hourly_list[i - 1]["pop"].as<float>() * 100;
             hourlyPressure[i]= hourly_list[i - 1]["pressure"].as<float>();
             hourlyIcon[i]    = hourly_list[i - 1]["weather"][0]["icon"].as<char *>();
@@ -154,7 +154,7 @@ protected:
             forecastTime[i]     = LocalTime(dayly_list[i]["dt"].as<int>());
             forecastMaxTemp[i]  = dayly_list[i]["temp"]["max"].as<float>();
             forecastMinTemp[i]  = dayly_list[i]["temp"]["min"].as<float>();
-            forecastRain[i]     = dayly_list[i]["rain"].as<float>();
+            forecastRain[i]     = max(dayly_list[i]["rain"].as<float>(), dayly_list[i]["snow"].as<float>());
             forecastPop[i]      = dayly_list[i]["pop"].as<float>() * 100;
             forecastPressure[i] = dayly_list[i]["pressure"].as<float>();
             forecastIcon[i]     = dayly_list[i]["weather"][0]["icon"].as<char *>();
