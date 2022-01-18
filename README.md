@@ -20,6 +20,8 @@ Originally forked from [https://github.com/Bastelschlumpf/M5PaperWeather](https:
   * _[NEW]_ A daily forecast with min/max temperature, probability of precipitation, and a weather icon.
   * _[NEW]_ Hourly and daily forecast graphs with temperature and rain.
 
+  The information will be updated every hour or manually by pressing a button _[NEW]_.
+
 ### License
    This program is licensed under GPL-3.0
 
