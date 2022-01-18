@@ -48,5 +48,7 @@ void ShutdownEPD(int sec)
    M5.disableEXTPower();
    esp_sleep_enable_timer_wakeup((uint64_t)sec * 1000000LL);
    esp_sleep_enable_ext0_wakeup((gpio_num_t)M5EPD_KEY_PUSH_PIN, 0);
+   gpio_hold_en((gpio_num_t)M5EPD_MAIN_PWR_PIN);
+   gpio_deep_sleep_hold_en();
    esp_deep_sleep_start();   
 }
