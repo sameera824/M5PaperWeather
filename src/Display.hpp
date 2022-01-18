@@ -290,7 +290,12 @@ void WeatherDisplay::DrawDaily(int x, int y, int dx, int dy, Weather &weather, i
    String icon = weather.forecastIcon[index];
    
    canvas.setTextSize(2);
+   if (weekday(time) == 1 || weekday(time) == 7) {
+      canvas.setTextColor(WHITE, M5EPD_Canvas::G2);
+      canvas.fillRect(x + 1, y + 1, dx - 1, 26, M5EPD_Canvas::G2);
+   }
    canvas.drawCentreString(index == 0 ? "Today" : getShortDayOfWeekString(time), x + dx / 2, y + 5, 1);
+   canvas.setTextColor(WHITE, BLACK);
 
    int iconX = x + dx / 2 - 32;
    int iconY = y + 20;
