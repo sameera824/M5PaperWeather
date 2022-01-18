@@ -52,8 +52,8 @@ protected:
 
    void DrawDaily(int x, int y, int dx, int dy, Weather &weather, int index);
    
-   void DrawGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[], float values2[]);
-   void DrawDualGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[], int offsetB, int yMinB, int yMaxB, float valuesB[]);
+   void DrawGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[], float values2[], float nightZone1 = 0, float nightZone2 = 0);
+   void DrawDualGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[], int offsetB, int yMinB, int yMaxB, float valuesB[], float nightZone1 = 0, float nightZone2 = 0);
 
 public:
    WeatherDisplay(MyData &md, int x = 960, int y = 540)
@@ -325,7 +325,7 @@ void WeatherDisplay::DrawDaily(int x, int y, int dx, int dy, Weather &weather, i
 }
 
 /* Draw a graph with x- and y-axis and values */
-void WeatherDisplay::DrawGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[], float values2[])
+void WeatherDisplay::DrawGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[], float values2[], float nightZone1, float nightZone2)
 {
    String yMinString = String(yMin);
    String yMaxString = String(yMax);
@@ -348,6 +348,12 @@ void WeatherDisplay::DrawGraph(int x, int y, int dx, int dy, String title, int x
       canvas.drawString(String(i), graphX + i * xStep, graphY + graphDY + 5);   
    }
    
+   if (nightZone1 > 0) {
+      canvas.fillRect(graphX, graphY, nightZone1 * (float)graphDX / 12., graphDY, M5EPD_Canvas::G4);
+   }
+   if (nightZone2 > 0) {
+      canvas.fillRect(graphX + graphDX - nightZone2 * (float)graphDX / 12, graphY, nightZone2 * (float)graphDX / 12, graphDY, M5EPD_Canvas::G4);
+   }
    canvas.drawRect(graphX, graphY, graphDX, graphDY, M5EPD_Canvas::G15);   
    if (yMin < 0 && yMax > 0) { // null line?
       float yValueDX = (float) graphDY / (yMax - yMin);
@@ -400,7 +406,7 @@ void WeatherDisplay::DrawGraph(int x, int y, int dx, int dy, String title, int x
 }
 
 /* Draw a dual graph */
-void WeatherDisplay::DrawDualGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[], int offset, int yMinB, int yMaxB, float valuesB[])
+void WeatherDisplay::DrawDualGraph(int x, int y, int dx, int dy, String title, int xMin, int xMax, int yMin, int yMax, float values[], int offset, int yMinB, int yMaxB, float valuesB[], float nightZone1, float nightZone2)
 {
    String yMinString = String(yMinB);
    String yMaxString = String(yMaxB);
@@ -423,6 +429,12 @@ void WeatherDisplay::DrawDualGraph(int x, int y, int dx, int dy, String title, i
       canvas.drawString(String(i), graphX + i * xStep, graphY + graphDY + 5);   
    }
    
+   if (nightZone1 > 0) {
+      canvas.fillRect(graphX, graphY, nightZone1 * (float)graphDX / 12., graphDY, M5EPD_Canvas::G4);
+   }
+   if (nightZone2 > 0) {
+      canvas.fillRect(graphX + graphDX - nightZone2 * (float)graphDX / 12, graphY, nightZone2 * (float)graphDX / 12, graphDY, M5EPD_Canvas::G4);
+   }
    canvas.drawRect(graphX, graphY, graphDX, graphDY, M5EPD_Canvas::G15);   
    if (yMin < 0 && yMax > 0) { // null line?
       float yValueDX = (float) graphDY / (yMax - yMin);
@@ -504,9 +516,16 @@ void WeatherDisplay::Show()
       DrawDaily(x, 286, 116, 122, myData.weather, i);
    }
 
+   float hoursUntilSunlize = 0, hoursAfterSunset = 0;
+   if (myData.weather.currentTime < myData.weather.sunrise) {
+      hoursUntilSunlize = (myData.weather.sunrise - myData.weather.currentTime) / 3600.0;
+   }
+   if (myData.weather.currentTime + 12 * 60 * 60 > myData.weather.sunset) {
+      hoursAfterSunset = (myData.weather.currentTime + 12 * 60 * 60 - myData.weather.sunset) / 3600.0;
+   }
    canvas.drawRect(15, 408, maxX - 30, 122, M5EPD_Canvas::G15);
-   DrawGraph( 15, 408, 232, 122, "Temp 12h (C)", 0, 12, myData.weather.hourlyTempRange[0], myData.weather.hourlyTempRange[1], myData.weather.hourlyMaxTemp, NULL);
-   DrawDualGraph(247, 408, 232, 122, "Rain 12h (mm/%)", 0, 12,   0,  100, myData.weather.hourlyPop, 1, 0, myData.weather.hourlyMaxRain, myData.weather.hourlyRain);
+   DrawGraph( 15, 408, 232, 122, "Temp 12h (C)", 0, 12, myData.weather.hourlyTempRange[0], myData.weather.hourlyTempRange[1], myData.weather.hourlyMaxTemp, NULL, hoursUntilSunlize, hoursAfterSunset);
+   DrawDualGraph(247, 408, 232, 122, "Rain 12h (mm/%)", 0, 12,   0,  100, myData.weather.hourlyPop, 1, 0, myData.weather.hourlyMaxRain, myData.weather.hourlyRain, hoursUntilSunlize, hoursAfterSunset);
    canvas.drawLine(480, 408, 480, 530, M5EPD_Canvas::G15);
    DrawGraph(481, 408, 232, 122, "Temp 7days (C)", 0,  7, myData.weather.forecastTempRange[0], myData.weather.forecastTempRange[1], myData.weather.forecastMinTemp, myData.weather.forecastMaxTemp);
    DrawDualGraph(713, 408, 232, 122, "Rain 7days (mm/%)", 0,  7,   0,  100, myData.weather.forecastPop, 0, 0, myData.weather.forecastMaxRain, myData.weather.forecastRain);
