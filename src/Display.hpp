@@ -345,7 +345,7 @@ void WeatherDisplay::DrawGraph(int x, int y, int dx, int dy, String title, int x
    canvas.drawString(yMaxString, x + 5, graphY - 5);   
    canvas.drawString(yMinString, x + 5, graphY + graphDY - 3);   
    for (int i = 0; i <= xMax; i++) {
-      canvas.drawString(String(i), graphX + i * xStep, graphY + graphDY + 5);   
+      canvas.drawCentreString(String(i), graphX + i * xStep, graphY + graphDY + 5, 1);   
    }
    
    if (nightZone1 > 0) {
@@ -426,7 +426,7 @@ void WeatherDisplay::DrawDualGraph(int x, int y, int dx, int dy, String title, i
    canvas.drawString(yMaxString, x + 5, graphY - 5);   
    canvas.drawString(yMinString, x + 5, graphY + graphDY - 3);   
    for (int i = 0; i <= xMax; i++) {
-      canvas.drawString(String(i), graphX + i * xStep, graphY + graphDY + 5);   
+      canvas.drawCentreString(String(i), graphX + i * xStep, graphY + graphDY + 5, 1);   
    }
    
    if (nightZone1 > 0) {
@@ -448,7 +448,7 @@ void WeatherDisplay::DrawDualGraph(int x, int y, int dx, int dy, String title, i
          canvas.drawLine(xDash, yPos, xDash + 5, yPos, M5EPD_Canvas::G15);         
       }
    }
-   for (int i = xMin; i < xMax; i++) {
+   for (int i = xMin; i <= xMax; i++) {
       float yValue   = valuesB[i - xMin];
       float yValueDY = (float) graphDY / (float)(yMaxB - yMinB);
       int   xPos     = graphX + graphDX / (xMax - xMin) * i;
@@ -457,8 +457,16 @@ void WeatherDisplay::DrawDualGraph(int x, int y, int dx, int dy, String title, i
       if (yPos > graphY + graphDY) yPos = graphY + graphDY;
       if (yPos < graphY)           yPos = graphY;
 
-      int width = graphDX / (xMax - xMin);
+      int width = graphDX / (xMax - xMin) - 4;
       int height = (graphY + graphDY) - yPos;
+      if (i == xMin) {
+         width /= 2;
+      } else {
+         xPos -= width / 2;
+      }
+      if (i == xMax) {
+         width = width / 2 + 2;
+      }
       if (height > 0) {
          canvas.fillRect(xPos, yPos, width, height, M5EPD_Canvas::G15);
       }
