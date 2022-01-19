@@ -349,10 +349,10 @@ void WeatherDisplay::DrawGraph(int x, int y, int dx, int dy, String title, int x
    }
    
    if (nightZone1 > 0) {
-      canvas.fillRect(graphX, graphY, nightZone1 * (float)graphDX / 12., graphDY, M5EPD_Canvas::G4);
+      canvas.fillRect(graphX, graphY, nightZone1 * (float)graphDX / 12.F, graphDY, M5EPD_Canvas::G4);
    }
    if (nightZone2 > 0) {
-      canvas.fillRect(graphX + graphDX - nightZone2 * (float)graphDX / 12, graphY, nightZone2 * (float)graphDX / 12, graphDY, M5EPD_Canvas::G4);
+      canvas.fillRect(max(graphX + graphDX - nightZone2 * (float)graphDX / 12.F, (float)graphX), graphY, min(nightZone2 * (float)graphDX / 12.F, (float)graphDX), graphDY, M5EPD_Canvas::G4);
    }
    canvas.drawRect(graphX, graphY, graphDX, graphDY, M5EPD_Canvas::G15);   
    if (yMin < 0 && yMax > 0) { // null line?
@@ -430,10 +430,10 @@ void WeatherDisplay::DrawDualGraph(int x, int y, int dx, int dy, String title, i
    }
    
    if (nightZone1 > 0) {
-      canvas.fillRect(graphX, graphY, nightZone1 * (float)graphDX / 12., graphDY, M5EPD_Canvas::G4);
+      canvas.fillRect(graphX, graphY, nightZone1 * (float)graphDX / 12.F, graphDY, M5EPD_Canvas::G4);
    }
    if (nightZone2 > 0) {
-      canvas.fillRect(graphX + graphDX - nightZone2 * (float)graphDX / 12, graphY, nightZone2 * (float)graphDX / 12, graphDY, M5EPD_Canvas::G4);
+      canvas.fillRect(max(graphX + graphDX - nightZone2 * (float)graphDX / 12.F, (float)graphX), graphY, min(nightZone2 * (float)graphDX / 12.F, (float)graphDX), graphDY, M5EPD_Canvas::G4);
    }
    canvas.drawRect(graphX, graphY, graphDX, graphDY, M5EPD_Canvas::G15);   
    if (yMin < 0 && yMax > 0) { // null line?
