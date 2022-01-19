@@ -17,7 +17,7 @@ Originally forked from [https://github.com/Bastelschlumpf/M5PaperWeather](https:
   * Sun section with sunrise and sunset 
   * Wind section with wind direction and wind speed
   * The internal SH30 sensor data (temperature and humidity) with the current date and time
-  * _[NEW]_ A daily forecast with min/max temperature, probability of precipitation, and a weather icon.
+  * _[NEW]_ A daily forecast with min/max temperature, probability of precipitation, precipitation volume, and a weather icon.
   * _[NEW]_ Hourly and daily forecast graphs with temperature and rain.
 
   The information will be updated every hour or manually by pressing a button _[NEW]_.
